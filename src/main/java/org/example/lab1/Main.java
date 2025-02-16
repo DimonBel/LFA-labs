@@ -21,12 +21,11 @@ public class Main {
                 startSymbol
         );
 
-        //grammar.generateStrings();
         List<String> generatedWords = grammar.generateStrings();
 
         FiniteAutomata fa = grammar.toFiniteAutomaton();
 
-        System.out.println("\nПроверка принадлежности сгенерированных строк языку:");
+        System.out.println("\nControl if is valid words ( like correct words ):");
         for (String word : generatedWords) {
             System.out.println(word + " принадлежит языку? " + fa.stringBelongsToLanguage(word));
         }
@@ -34,9 +33,9 @@ public class Main {
         // Проверка заведомо некорректных слов
         List<String> incorrectWords = Arrays.asList("xyz", "abc", "da", "ae", "cc", "fS", "rL", "aee");
 
-        System.out.println("\nПроверка некорректных строк:");
+        System.out.println("\nControl wrong words");
         for (String word : incorrectWords) {
-            System.out.println(word + " принадлежит языку? " + fa.stringBelongsToLanguage(word));
+            System.out.println(word + " are in grammar " + fa.stringBelongsToLanguage(word));
         }
     }
 }
