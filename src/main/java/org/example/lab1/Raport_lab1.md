@@ -45,10 +45,6 @@ Imagine a simple machine that reads an input (like a string of symbols) step by 
 
 ## Implementation description
 
-```java
-package org.example.lab1;
-```
-
 # `Grammar` Class Description
 
 The `Grammar` class represents a formal grammar used for generating strings based on predefined production rules. It also provides functionality to convert the grammar into a finite automaton.
