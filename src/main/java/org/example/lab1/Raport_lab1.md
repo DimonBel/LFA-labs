@@ -71,37 +71,89 @@ The `Grammar` class represents a formal grammar used for generating strings base
 ```java
 public List<String> generateStrings()
 ```
+The `generateStrings()` function is a Java method that generates a list of random strings and returns them. Below is a step-by-step explanation of its functionality:
 
-Generates five valid strings using the grammar's production rules.
+1. **Initialization**:
+    - It creates an empty `ArrayList` of type `String` called `generatedStrings` to store the generated strings.
 
-- Calls `generateWord("S")` five times.
-- Prints and stores the generated strings in a list.
-- Returns a list of five generated strings.
+2. **Loop**:
+    - It uses a `for` loop that runs **5 times** (from `i = 0` to `i = 4`). In each iteration:
+        - It calls a helper method `generateWord("S")` to generate a random string. The `"S"` passed as an argument suggests that the generation process might start with or be based on the letter "S" (though the exact logic of `generateWord` is not provided).
+        - The generated string is printed to the console using `System.out.println(generatedWord)`.
+        - The generated string is added to the `generatedStrings` list.
 
-### **2. **``** (Private, Static)**
+3. **Return**:
+    - After the loop completes, the function returns the `generatedStrings` list containing the 5 generated strings.
+
+### **2** (Private, Static)
 
 ```java
 private static String generateWord(String symbol)
 ```
 
-Recursively generates a valid string from the given non-terminal symbol by:
+The `generateWord` method is a private static helper function in Java that generates a random string based on a given symbol and a set of production rules. It uses recursion to construct the final string. Below is a detailed explanation of its functionality:
 
-- Checking if the symbol is terminal (returns it directly).
-- Selecting a random production rule.
-- Recursively processing each character in the rule.
+1. **Input**:
+    - The method takes a `String symbol` as input, which represents the starting symbol for generating the string.
+
+2. **Terminal Symbol Check**:
+    - It first checks if the `symbol` is a terminal symbol (i.e., it does not exist in the `productions` map).
+        - If the `symbol` is terminal, it is returned as-is.
+
+3. **Non-Terminal Symbol Handling**:
+    - If the `symbol` is non-terminal (i.e., it exists in the `productions` map):
+        - A random production rule is selected from the list of rules associated with the `symbol` in the `productions` map.
+        - The selected rule is processed recursively to construct the final string.
+
+4. **Recursive Processing**:
+    - The method iterates over each character in the selected rule:
+        - For each character, the `generateWord` method is called recursively to generate the corresponding substring.
+        - The results are appended to a `StringBuilder` object to construct the final string.
+
+5. **Return**:
+    - The method returns the fully constructed string as a `String`.
+
+#### Key Components:
+- **`productions` Map**:
+    - A map (likely `Map<String, List<String>>`) that stores production rules for non-terminal symbols. Each key is a non-terminal symbol, and the value is a list of possible rules (strings) that can replace the symbol.
+- **Random Selection**:
+    - A random rule is selected using `random.nextInt(productions.get(symbol).size())`, ensuring variability in the generated strings.
+- **Recursion**:
+    - The method uses recursion to handle nested symbols and rules, allowing for complex string generation.
+
 
 ### **3. **``
 
 ```java
 public FiniteAutomata toFiniteAutomaton()
 ```
+The `toFiniteAutomaton` method converts a context-free grammar (represented by the current object) into a finite automaton. It constructs the automaton's states, alphabet, transitions, initial state, and final states based on the grammar's non-terminal symbols, terminal symbols, and production rules. Below is a detailed explanation of its functionality:
 
-Converts the grammar into a finite automaton.
+1. **Initialization**:
+    - **States**: A set of states is created using the non-terminal symbols (`nonTerminals`).
+    - **Alphabet**: A set of alphabet symbols is created using the terminal symbols (`terminals`).
+    - **Transitions**: A nested map (`Map<String, Map<String, Set<String>>>`) is initialized to store transitions between states based on input symbols.
+    - **Initial State**: The start symbol (`startSymbol`) of the grammar is set as the initial state of the automaton.
+    - **Final States**: A set of final states is initialized to store accepting states.
 
-- Defines the automaton states, alphabet, transitions, initial state, and final states.
-- Iterates over `productions` to construct transition mappings.
-- Determines final states based on terminal symbols.
-- Returns a `FiniteAutomata` instance with the generated transition system.
+2. **Transition Construction**:
+    - For each non-terminal symbol in the `productions` map:
+        - A new entry is added to the `transitions` map for the non-terminal symbol.
+        - For each production rule associated with the non-terminal symbol:
+            - The first symbol of the production rule is extracted (`firstSymbol`).
+            - The remaining part of the production rule is extracted (`rest`), if any.
+            - A transition is added from the non-terminal symbol to the `rest` (or `firstSymbol` if `rest` is empty) on the input `firstSymbol`.
+            - If the `firstSymbol` is a terminal symbol, it is added to the set of final states.
+
+3. **Return**:
+    - A `FiniteAutomata` object is created and returned, encapsulating the constructed states, alphabet, transitions, initial state, and final states.
+
+#### Key Components:
+- **`nonTerminals`**: A set of non-terminal symbols in the grammar, used as states in the automaton.
+- **`terminals`**: A set of terminal symbols in the grammar, used as the alphabet of the automaton.
+- **`productions`**: A map (`Map<String, List<String>>`) storing production rules for each non-terminal symbol.
+- **`startSymbol`**: The start symbol of the grammar, used as the initial state of the automaton.
+- **`FiniteAutomata`**: A class representing the finite automaton, constructed using the provided components.
 
 ## **Usage Example**
 
