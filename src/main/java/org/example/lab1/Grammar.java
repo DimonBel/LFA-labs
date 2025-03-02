@@ -15,6 +15,8 @@ package org.example.lab1;
 //L → d
 //}
 
+import org.example.lab2.FinitaAutomata;
+
 import java.util.*;
 
 

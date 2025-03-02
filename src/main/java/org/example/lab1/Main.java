@@ -11,7 +11,7 @@ public class Main {
         rules.put("L", Arrays.asList("fL", "eL", "d"));
 
         Set<String> nonTerminals = new HashSet<>(Arrays.asList("S", "L", "R"));
-        Set<String> terminals = new HashSet<>(Arrays.asList("a", "b", "c", "d", "e","f"));
+        Set<String> terminals = new HashSet<>(Arrays.asList("a", "b", "c", "d", "e", "f"));
         String startSymbol = "S";
 
         Grammar grammar = new Grammar(
@@ -37,5 +37,6 @@ public class Main {
         for (String word : incorrectWords) {
             System.out.println(word + " are in grammar " + fa.stringBelongsToLanguage(word));
         }
+
     }
 }
