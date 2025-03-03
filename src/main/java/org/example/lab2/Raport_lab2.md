@@ -155,52 +155,37 @@ The method returns the most restrictive type that applies to the grammar.
 
 3. **Type 3 (Regular Grammar) Check**:
     - A grammar is **Type 3** if its rules are either:
-        - **Right-linear**: `A → aB` or `A → a`, where `A` and `B` are non-terminals, and `a` is a terminal.
-        - **Left-linear**: `A → Ba` or `A → a`, where `A` and `B` are non-terminals, and `a` is a terminal.
+      **Right-linear**: `A → aB` or `A → a`, where `A` and `B` are non-terminals, and `a` is a terminal.
+      **Left-linear**: `A → Ba` or `A → a`, where `A` and `B` are non-terminals, and `a` is a terminal.
     - The method checks:
-        - If the RHS has length `1`, it must be a terminal.
-        - If the RHS has length `2`, it must be either:
-            - A terminal followed by a non-terminal (`aB`), or
-            - A non-terminal followed by a terminal (`Ba`).
+      If the RHS has length `1`, it must be a terminal.
+      If the RHS has length `2`, it must be either:
+          A terminal followed by a non-terminal (`aB`), or
+          A non-terminal followed by a terminal (`Ba`).
     - If any rule violates these conditions, `isType3` is set to `false`.
 
 4. **Type 2 (Context-Free Grammar) Check**:
     - A grammar is **Type 2** if all rules are of the form:
-        - `A → α`, where `A` is a single non-terminal, and `α` is a string of terminals and/or non-terminals.
+      `A → α`, where `A` is a single non-terminal, and `α` is a string of terminals and/or non-terminals.
     - The method checks:
-        - If the LHS is not a single non-terminal, `isType2` is set to `false`.
+      If the LHS is not a single non-terminal, `isType2` is set to `false`.
 
 5. **Type 1 (Context-Sensitive Grammar) Check**:
     - A grammar is **Type 1** if all rules are of the form:
-        - `αAβ → αγβ`, where `A` is a non-terminal, `α` and `β` are strings of symbols, and `γ` is a non-empty string.
-        - Additionally, the length of the RHS must be greater than or equal to the length of the LHS (`|γ| >= |A|`).
+      `αAβ → αγβ`, where `A` is a non-terminal, `α` and `β` are strings of symbols, and `γ` is a non-empty string.
+      Additionally, the length of the RHS must be greater than or equal to the length of the LHS (`|γ| >= |A|`).
     - The method checks:
         - If the length of the RHS is less than the length of the LHS, `isType1` is set to `false`.
 
 6. **Determine Grammar Type**:
     - After checking all rules, the method returns the most restrictive type that applies:
-        - If `isType3` is `true`, the grammar is **Type 3 (Regular)**.
-        - If `isType3` is `false` but `isType2` is `true`, the grammar is **Type 2 (Context-Free)**.
-        - If both `isType3` and `isType2` are `false` but `isType1` is `true`, the grammar is **Type 1 (Context-Sensitive)**.
-        - If none of the above conditions are met, the grammar is **Type 0 (Unrestricted)**.
+      If `isType3` is `true`, the grammar is **Type 3 (Regular)**.
+      If `isType3` is `false` but `isType2` is `true`, the grammar is **Type 2 (Context-Free)**.
+      If both `isType3` and `isType2` are `false` but `isType1` is `true`, the grammar is **Type 1 (Context-Sensitive)**.
+      If none of the above conditions are met, the grammar is **Type 0 (Unrestricted)**.
 
 ---
 
-#### **Example Output**
-- If the grammar satisfies **Type 3** conditions, the method returns:
-
-```Type 3: Regular Grammar```
-- If the grammar satisfies **Type 2** conditions but not **Type 3**, the method returns:
-
-```Type 2: Context-Free Grammar```
-
-- If the grammar satisfies **Type 1** conditions but not **Type 2** or **Type 3**, the method returns:
-
-```Type 1: Context-Sensitive Grammar```
-
-- If the grammar does not satisfy any of the above conditions, the method returns:
-
-```Type 0: Unrestricted Grammar```
 #### Key Components:
 - **`nonTerminals`**: A set of non-terminal symbols in the grammar, used as states in the automaton.
 - **`terminals`**: A set of terminal symbols in the grammar, used as the alphabet of the automaton.
@@ -312,17 +297,17 @@ How It Works
 
 Transition Analysis:
 
-    The method iterates through all transitions in the FA.
+The method iterates through all transitions in the FA.
 
-    For each state and symbol, it checks if there is more than one possible next state.
+For each state and symbol, it checks if there is more than one possible next state.
 
-    If any transition has multiple next states for the same symbol, the automaton is non-deterministic.
+If any transition has multiple next states for the same symbol, the automaton is non-deterministic.
 
 Return Result:
 
-    Returns true if the automaton is deterministic (no ambiguities in transitions).
+Returns true if the automaton is deterministic (no ambiguities in transitions).
 
-    Returns false if the automaton is non-deterministic.
+Returns false if the automaton is non-deterministic.
 
 
 ## Method: `convertToDFA()`
@@ -390,8 +375,9 @@ Computes the epsilon closure of a set of states in an NFA. The epsilon closure i
 
 ## Conclusions / Screenshots / Results
 
-In conclusion, this lab gave me a nice opportunity to practice classes in JS (I didn't work with them for a long time). Also, due to this lab, I improved my knowledge about grammar and finite automaton and sustained my knowledge with practical tasks.
+This laboratory work provided a valuable opportunity to deepen my understanding of formal languages and finite automata through practical implementation. By working with classes in Java, I was able to reinforce my programming skills, particularly in object-oriented design, which I hadn't practiced in a while. The tasks involved implementing key concepts such as grammar classification, finite automaton conversion, and determinism checks, which allowed me to apply theoretical knowledge to real-world problems.
 
+One of the main takeaways from this lab was the importance of understanding the relationship between grammars and automata. By converting a grammar into a finite automaton and vice versa, I gained insight into how these two formalisms are interconnected. Additionally, implementing algorithms to classify grammars based on the Chomsky hierarchy and to convert non-deterministic finite automata (NFA) into deterministic finite automata (DFA) helped solidify my understanding of these concepts
 ![Результаты лабораторной работы](../../../../resources/Lfa-lab2.png)
 
 *As we can see, the results are good...*

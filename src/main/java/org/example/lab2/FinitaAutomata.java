@@ -98,7 +98,7 @@ public class FinitaAutomata {
             newProductions.putIfAbsent(newFinalState, new ArrayList<>(List.of("ε")));
         }
 
-        System.out.println(newProductions); // Выведет корректный `Map<String, List<String>>`
+        System.out.println(newProductions);
 
         return new Grammar(nonTerminals, terminals, newProductions, stateMapping.get(initialState));
     }
@@ -107,7 +107,7 @@ public class FinitaAutomata {
         for (Map<String, Set<String>> stateTransitions : transitions.values()) {
             for (Set<String> nextStates : stateTransitions.values()) {
                 if (nextStates.size() > 1) {
-                    return false; // Недиетерминированный, так как есть несколько переходов по одному символу
+                    return false;
                 }
             }
         }
