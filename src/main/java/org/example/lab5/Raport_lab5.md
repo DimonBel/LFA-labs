@@ -52,14 +52,13 @@ The `Grammar` class represents a context-free grammar with non-terminals, termin
 - **`productions`**: A map where the key is a non-terminal (e.g., `S`) and the value is a set of production rules (each rule is a `List<String>` representing the right-hand side, RHS).
 - **`startSymbol`**: The starting non-terminal of the grammar.
 
-### Constructor
-```java
-public Grammar(Set<String> nonTerminals, Set<String> terminals, Map<String, Set<List<String>>> productions, String startSymbol)
-```
-- **Purpose**: Initializes the grammar with the provided sets and map.
+The Grammar class encapsulates the structure of a context-free grammar, including its non-terminal symbols, terminal symbols, production rules, and the start symbol.
+
+The constructor initializes the grammar with the provided sets of non-terminals, terminals, production rules, and the start symbol. The production rules are stored as a map where each key is a non-terminal symbol, and the corresponding value is a set of possible right-hand sides (RHS) for that non-terminal.
+
+The printGrammar() method provides a readable representation of the grammar. For each production rule, it prints the left-hand side (LHS) followed by the RHS. If the RHS is empty (indicating an ε-production), it displays ε.
 
 ### `printGrammar()`
-- **Purpose**: Prints all productions in a readable format.
 - **How it Works**:
     - If a production’s RHS is empty (`rhs.isEmpty()`), it prints `ε` (epsilon).
     - Otherwise, it joins the symbols with spaces (e.g., `S → a B`).
@@ -74,23 +73,17 @@ The `GrammarNormalizer` class contains the logic to normalize a CFG into CNF. Th
 4. `eliminateNonProductiveSymbols`
 5. `convertToCNF`
 
+This class contains the logic for converting a grammar into CNF. The conversion is performed in a step-by-step manner, with each step implemented as a separate method. The main method, normalizeToCNF(), orchestrates the process by calling these helper methods in sequence.
+
 ### `normalizeToCNF(Grammar grammar)`
 - **Purpose**: Converts the input grammar to CNF by applying all necessary transformations.
 - **Process**: Calls the five helper methods sequentially and returns the modified grammar.
 - **CNF Requirements**: After this process, every production will either be of the form `A → BC` (two non-terminals) or `A → c` (one terminal), except possibly `S → ε` for the start symbol if the language includes the empty string.
 
 ### `eliminateEpsilon(Grammar grammar)`
-- **Purpose**: Removes all epsilon (`ε`) productions (e.g., `A → ε`) except possibly from the start symbol.
-- **How it Works**:
-    1. **Find Nullable Symbols**:
-        - Identifies non-terminals that directly produce `ε` (empty list in `rhs`).
-        - Iteratively finds additional nullable symbols: if a production `A → B C` exists and both `B` and `C` are nullable, then `A` is nullable too. Continues until no new nullable symbols are found (`changed = false`).
-    2. **Generate New Productions**:
-        - For each production (e.g., `A → B C`), generates all possible combinations where nullable symbols can be omitted (e.g., `A → B C`, `A → B`, `A → C`, `A → ε` if both are nullable).
-        - Uses `generateNullableCombinations` to compute these variations.
-    3. **Remove Unwanted Epsilons**:
-        - Removes `ε` productions from all non-terminals except the start symbol (`!lhs.equals(grammar.startSymbol)`).
+This method removes all ε-productions (except for the start symbol if needed). It first identifies nullable non-terminals (those that can derive ε) by iteratively checking productions where all symbols in the RHS are nullable. For each production, it generates all possible combinations where nullable symbols are omitted. Finally, it removes ε-productions from all non-terminals except the start symbol
 - **Example**: If `S → A B`, `A → ε`, `B → ε`, then `S` becomes nullable, and new productions might include `S → A B`, `S → A`, `S → B`, and `S → ε`.
+
 
 ### `generateNullableCombinations(List<String> symbols, Set<String> nullable)`
 - **Purpose**: Helper method to generate all possible combinations of a production’s RHS by omitting nullable symbols.
@@ -101,14 +94,8 @@ The `GrammarNormalizer` class contains the logic to normalize a CFG into CNF. Th
 - **Example**: For `rhs = [A, B]` where both `A` and `B` are nullable, it generates `[[A, B], [A], [B], []]`.
 
 ### `eliminateUnitProductions(Grammar grammar)`
-- **Purpose**: Removes unit productions (e.g., `A → B`, where `B` is a non-terminal).
-- **How it Works**:
-    1. **Compute Unit Closure**:
-        - For each non-terminal `lhs`, uses `getUnitClosure` to find all non-terminals reachable via unit productions (e.g., `A → B`, `B → C` means `A` reaches `C`).
-    2. **Replace with Non-Unit Productions**:
-        - For each reachable non-terminal, copies its non-unit productions (RHS not a single non-terminal) to `lhs`.
-    3. **Update Productions**:
-        - Replaces the original productions with the new set.
+Unit productions (of the form A → B) are eliminated by computing the unit closure for each non-terminal (all non-terminals reachable via unit productions). For each non-terminal in the closure, the method copies its non-unit productions to the original non-terminal, effectively bypassing the unit productions.
+
 - **Example**: If `A → B`, `B → b`, then `A → b` is added, and `A → B` is removed.
 
 ### `getUnitClosure(String symbol, Grammar grammar)`
@@ -120,53 +107,29 @@ The `GrammarNormalizer` class contains the logic to normalize a CFG into CNF. Th
 - **Example**: For `A → B`, `B → C`, returns `{A, B, C}` for `A`.
 
 ### `eliminateInaccessibleSymbols(Grammar grammar)`
-- **Purpose**: Removes non-terminals that cannot be reached from the start symbol.
-- **How it Works**:
-    - Uses a queue-based breadth-first search (BFS) starting from `startSymbol`.
-    - Adds each non-terminal encountered in any RHS to the `accessible` set and continues exploring.
-    - Retains only accessible non-terminals in `productions` and `nonTerminals`.
+This method removes non-terminals that cannot be reached from the start symbol. Using a breadth-first search (BFS), it traverses the grammar starting from the start symbol, marking reachable non-terminals. Any non-terminal not marked as reachable is removed from the grammar.
+
 - **Example**: If `S → A`, `A → a`, but `B → b` exists with no path from `S`, then `B` is removed.
 
 ### `eliminateNonProductiveSymbols(Grammar grammar)`
-- **Purpose**: Removes non-terminals that cannot produce a string of terminals (non-productive).
-- **How it Works**:
-    - Iteratively builds a set of productive non-terminals:
-        - A non-terminal is productive if all symbols in at least one of its RHS are either terminals or already productive.
-        - Continues until no new productive symbols are added (`changed = false`).
-    - Retains only productive non-terminals in `productions` and `nonTerminals`.
+Non-productive symbols (those that cannot derive a string of terminals) are identified and removed. The method iteratively builds a set of productive non-terminals by checking if at least one of their productions consists solely of terminals or productive non-terminals.
+
 - **Example**: If `A → B`, but `B` has no productions leading to terminals, `A` and `B` are removed.
 
 ### `convertToCNF(Grammar grammar)`
-- **Purpose**: Ensures all productions are in CNF (`A → BC` or `A → c`).
-- **How it Works**:
-    1. **Handle Terminals in Long Productions**:
-        - For each terminal in an RHS of length > 1, replaces it with a new non-terminal (e.g., `T1`) and adds a production `T1 → terminal`.
-        - Stores mappings in `terminalMap` to reuse new variables.
-    2. **Break Long Productions**:
-        - For RHS with length > 2 (e.g., `A → B C D`), introduces new variables (e.g., `X1`) and splits it into binary productions (e.g., `A → X1 D`, `X1 → B C`).
-        - Uses a counter (`varCounter`) to generate unique variable names.
-    3. **Update Productions**:
-        - Replaces the original productions with the new binary and terminal productions.
+he final step ensures all productions adhere to CNF rules. Terminals in productions with more than one symbol are replaced with new non-terminals, and long productions are broken down into binary productions. For example, A → a B C becomes A → T1 X1, T1 → a, and X1 → B C, where T1 and X1 are newly introduced non-terminals.
 - **Example**: `S → a B C` becomes `S → T1 X1`, `T1 → a`, `X1 → B C`.
 
 ---
 
 ### 3. `Main` Class
-- **Purpose**: Demonstrates the normalization process with a sample grammar.
-- **How it Works**:
-    - Defines a grammar with:
-        - Non-terminals: `{S, A, B, C, D}`
-        - Terminals: `{a, b}`
-        - Productions: e.g., `S → a B | b A`, `A → B | b | a D | A S | B A A B | ε`, etc.
-        - Start symbol: `S`
-    - Prints the original grammar.
-    - Calls `GrammarNormalizer.normalizeToCNF(grammar)`.
-    - Prints the resulting CNF grammar.
+The Main class demonstrates the normalization process using a sample grammar. It defines a grammar with non-terminals {S, A, B, C, D}, terminals {a, b}, and a set of production rules. The original grammar is printed, normalized to CNF using GrammarNormalizer, and the resulting CNF grammar is displayed.
 - **Output**: Shows the transformation from the original grammar to CNF, with all steps applied.
 
 ---
 
 ## Summary of the Process
+The conversion to Chomsky Normal Form is a systematic process involving the elimination of ε-productions, unit productions, inaccessible symbols, and non-productive symbols, followed by restructuring the remaining productions into the required binary or terminal form. This implementation follows the standard algorithm, ensuring the resulting grammar is both correct and efficient for parsing. The modular design allows for easy extension and adaptation to different grammars, fulfilling the project's objectives.
 1. **Epsilon Removal**: Removes `ε` productions and adjusts for nullable symbols.
 2. **Unit Production Removal**: Eliminates `A → B` by copying non-unit productions.
 3. **Inaccessible Removal**: Removes unreachable non-terminals.

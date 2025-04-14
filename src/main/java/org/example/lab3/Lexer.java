@@ -4,10 +4,6 @@ package org.example.lab3;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author aNNiMON
- */
 public final class Lexer {
 
     private static final String OPERATOR_CHARS = "+-*/()";

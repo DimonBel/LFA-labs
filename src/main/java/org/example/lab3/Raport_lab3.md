@@ -202,7 +202,6 @@ Future enhancements could include:
 - Support for more complex token types (e.g., strings, comments).
 - Improved error handling for invalid input.
 - Integration with a parser to build a complete compiler or interpreter.
-# Summary
 
 This implementation demonstrates how a lexer works by:
 
