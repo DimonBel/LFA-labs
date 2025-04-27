@@ -23,6 +23,19 @@ public final class BinaryExpression implements Expression {
         }
     }
 
+    // Add getters
+    public char getOperation() {
+        return operation;
+    }
+
+    public Expression getLeftExpression() {
+        return expr1;
+    }
+
+    public Expression getRightExpression() {
+        return expr2;
+    }
+
     @Override
     public String toString() {
         return String.format("[%s %c %s]", expr1, operation, expr2);

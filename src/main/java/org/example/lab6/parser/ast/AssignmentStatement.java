@@ -18,6 +18,15 @@ public final class AssignmentStatement implements Statement {
         Variables.set(variable, result);
     }
 
+    // Add getters
+    public String getVariable() {
+        return variable;
+    }
+
+    public Expression getExpression() {
+        return expression;
+    }
+
     @Override
     public String toString() {
         return String.format("%s = %s", variable, expression);

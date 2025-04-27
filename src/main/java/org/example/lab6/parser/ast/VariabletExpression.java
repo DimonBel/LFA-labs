@@ -15,9 +15,13 @@ public final class VariabletExpression implements Expression {
         return Variables.get(name);
     }
 
+    // Add getter
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
-//        return String.format("%s [%f]", name, Constants.get(name));
         return String.format("%s", name);
     }
 }

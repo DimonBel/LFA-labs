@@ -20,8 +20,18 @@ public final class UnaryExpression implements Expression {
         }
     }
 
+    // Add getters
+    public char getOperation() {
+        return operation;
+    }
+
+    public Expression getExpression() {
+        return expr1;
+    }
+
     @Override
     public String toString() {
         return String.format("%c %s", operation, expr1);
     }
 }
+

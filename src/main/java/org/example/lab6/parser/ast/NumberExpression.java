@@ -13,6 +13,11 @@ public final class NumberExpression implements Expression {
         return value;
     }
 
+    // Add getter
+    public double getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return Double.toString(value);
